@@ -1,0 +1,69 @@
+Language model created by QuickLM on Sat Dec  5 10:46:01 EST 2015
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 11 sentences and 13 words
+
+\data\
+ngram 1=13
+ngram 2=22
+ngram 3=11
+
+\1-grams:
+-1.8195 341 -0.2218
+-1.8195 342 -0.2218
+-1.8195 343 -0.2218
+-0.7782 </s> -0.3010
+-0.7782 <s> -0.2218
+-1.8195 BATHROOM -0.2218
+-1.8195 GO -0.2218
+-1.8195 ITE -0.2218
+-1.8195 NO -0.2218
+-1.8195 PLEASE -0.2218
+-1.8195 ROOM -0.2218
+-1.8195 TO -0.2218
+-1.8195 YES -0.2218
+
+\2-grams:
+-0.3010 341 </s> -0.3010
+-0.3010 342 </s> -0.3010
+-0.3010 343 </s> -0.3010
+-1.3424 <s> 341 0.0000
+-1.3424 <s> 342 0.0000
+-1.3424 <s> 343 0.0000
+-1.3424 <s> BATHROOM 0.0000
+-1.3424 <s> GO 0.0000
+-1.3424 <s> ITE 0.0000
+-1.3424 <s> NO 0.0000
+-1.3424 <s> PLEASE 0.0000
+-1.3424 <s> ROOM 0.0000
+-1.3424 <s> TO 0.0000
+-1.3424 <s> YES 0.0000
+-0.3010 BATHROOM </s> -0.3010
+-0.3010 GO </s> -0.3010
+-0.3010 ITE </s> -0.3010
+-0.3010 NO </s> -0.3010
+-0.3010 PLEASE </s> -0.3010
+-0.3010 ROOM </s> -0.3010
+-0.3010 TO </s> -0.3010
+-0.3010 YES </s> -0.3010
+
+\3-grams:
+-0.3010 <s> 341 </s>
+-0.3010 <s> 342 </s>
+-0.3010 <s> 343 </s>
+-0.3010 <s> BATHROOM </s>
+-0.3010 <s> GO </s>
+-0.3010 <s> ITE </s>
+-0.3010 <s> NO </s>
+-0.3010 <s> PLEASE </s>
+-0.3010 <s> ROOM </s>
+-0.3010 <s> TO </s>
+-0.3010 <s> YES </s>
+
+\end\
