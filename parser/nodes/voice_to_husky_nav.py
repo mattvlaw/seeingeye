@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 
-"""
-voice_cmd_vel.py is a simple demo of speech recognition.
- You can control a mobile base using commands found
- in the corpus file.
-"""
-
 import roslib; roslib.load_manifest('pocketsphinx')
 import rospy
 import math
@@ -19,13 +13,11 @@ from std_msgs.msg import String, Int16
 # LIST OF OUTPUT VALUES
 # Opcodes:
 #   Stop & discard planned route: 0
-#   Pause (remember current route): 1
+#   Pause (stop moving but remember current route): 1
 #   Resume stored route: 2 
 # Numbered rooms:
 #   Rooms 301-324: 301-324
 #   "Room 325" (administrative office): 325
-#   Rooms 325A - 325M: 226-238 (225 + letter value, A=1, B=2, etc)
-#   "Room 325N": 239
 #   Rooms 326-377: 326-377
 # Building exit: 100
 # Elevators:
@@ -33,9 +25,9 @@ from std_msgs.msg import String, Int16
 #   South elevator: 111
 #   North elevator: 112
 # Restrooms:
-#   No direction, no gender: 120
-#       No direction, women: 121
-#       No direction, men: 122
+#   Nearest restroom, no gender specified: 120
+#       Nearest restroom, women: 121
+#       Nearest restroom, men: 122
 #   South, no gender: 123
 #       South, women: 124
 #       South, men: 125
