@@ -158,19 +158,19 @@ class voice_cmd_vel:
                 
         if (nav_mode):
           # Robot is moving.
-          # State is DRIVING (if has_dest) or RUNAWAY (if !has_dest).
+          # State is DRIVING (if has_dest) or RUNAWAY (if not has_dest).
           # Behavior: pause if drive_pause or RUNAWAY; otherwise no change.
-          if (new_string == drive_pause || !has_dest):
+          if (new_string == drive_pause or not has_dest):
             # new_string == drive_pause: we just received the pause command.
-            # !has_dest: we are RUNAWAY and need to generate our own pause command.
+            # not has_dest: we are RUNAWAY and need to generate our own pause command.
                         
             # Tell navigation to stop without discarding destination.
             self.pub_.publish(1)
                         
             # update internal state to PAUSED
             nav_mode = False
-        else if (has_dest && new_string == drive_resume):
-          # !nav_mode && has_dest: PAUSED.
+        elif (has_dest and new_string == drive_resume):
+          # not nav_mode and has_dest: PAUSED.
           # new_string == drive_resume: received resume command.
           # Behavior: resume driving, switch to nav_mode.
                     
@@ -179,9 +179,9 @@ class voice_cmd_vel:
                     
           # Update internal state to DRIVING.
           nav_mode = True
-        else if (new_string == request_start):
-          # !(nav_mode): not moving.
-          # !(has_dest && new_string == drive_resume): if PAUSED, not resuming.
+        elif (new_string == request_start):
+          # not (nav_mode): not moving.
+          # not (has_dest and new_string == drive_resume): if PAUSED, not resuming.
           # new_string == request_start: receiving new destination command.
           # Behavior: Record and parse incoming destination command.
                     
@@ -193,7 +193,7 @@ class voice_cmd_vel:
           direction = 0
           gender = 0
           restroom_count = 0
-          while (new_string != request_cancel && new_string != request_end):
+          while (new_string != request_cancel and new_string != request_end):
             # Until command is complete (request_end) or discarded
             # (request_cancel), keep listening.
                         
@@ -210,21 +210,21 @@ class voice_cmd_vel:
               words.append(new_string)
               if (new_string == "north"):
                 direction = 2
-              else if (new_string == "south"):
+              elif (new_string == "south"):
                 direction = 1
-              else if (new_string in male_words):
+              elif (new_string in male_words):
                 gender = 2
-              else if (new_string in female_words):
+              elif (new_string in female_words):
                 gender = 1
-              else if (new_string in number_words):
+              elif (new_string in number_words):
                 numbers_used.append(new_string)
-              else if (new_string in restroom_words):
-                restroom_count++
-              else if (new_string in professors):
+              elif (new_string in restroom_words):
+                restroom_count += 1
+              elif (new_string in professors):
                 prof_name = new_string
-              else if (new_string == "room" && gender > 0):
+              elif (new_string == "room" and gender > 0):
                 # "[gender] room"
-                restroom_count++
+                restroom_count += 1
             self.r.sleep()
                             
           # If command was canceled, ignore sequence.
@@ -236,7 +236,7 @@ class voice_cmd_vel:
               self.pub_.publish(100)
               has_dest = True
               nav_mode = True
-            else if ("elevator" in words):
+            elif ("elevator" in words):
               # User mentioned the elevator.
               # Current value of direction indicates any direction specified.
               value = 110 + direction
@@ -244,7 +244,7 @@ class voice_cmd_vel:
               self.pub_.publish(value)
               has_dest = True
               nav_mode = True
-            else if (restroom_count > 0):
+            elif (restroom_count > 0):
               # User mentioned the restroom.
               # Current value of direction indicates any direction specified.
               # Current value of gender indicates any gender specified.
@@ -253,7 +253,7 @@ class voice_cmd_vel:
               self.pub_.publish(value)
               has_dest = True
               nav_mode = True
-            else if (prof_name != ""):
+            elif (prof_name != ""):
               # User mentioned a professor's name.
               # Get that professor's office number.
               room_number = office[prof_name]
@@ -261,12 +261,12 @@ class voice_cmd_vel:
               self.pub_.publish(room_number)
               has_dest = True
               nav_mode = True
-            else if (len(numbers_used) > 0):
+            elif (len(numbers_used) > 0):
               # User mentioned a numbered room.
               # Parse numbers_used into a value.
               result_val = 0
               last_ten = False
-              for (i = 0; i < len(numbers_used); i++):
+              for i in range(0,len(numbers_used)):
                 curr_num = numbers_used[i]
                 curr_val = value_of[numbers_used[i]]
                 if (curr_num in one_digit_words):
@@ -274,7 +274,7 @@ class voice_cmd_vel:
                   result_val *= 10
                   result_val += curr_val
                   last_ten = False
-                else if (curr_num in two_digit_words):
+                elif (curr_num in two_digit_words):
                   # e.g., "[result_val] twelve ..."
                   if (last_ten):
                     # e.g., "[... thirty] twelve ..."
@@ -285,7 +285,7 @@ class voice_cmd_vel:
                     result_val *= 100
                   result_val += curr_val
                   last_ten = False
-                else if (curr_num in tens_digit_words):
+                elif (curr_num in tens_digit_words):
                   # e.g., "[result_val] forty ..."
                   if (last_ten):
                     # e.g., "[... twenty] forty ..."
@@ -303,7 +303,7 @@ class voice_cmd_vel:
                 result_val *= 10
                             
               # Check result_val against list of existing room numbers.
-              if (result_val >= 300 && result_val <= 377):
+              if (result_val >= 300 and result_val <= 377):
                 # result_val is a valid third-floor room.
                 # Pass result_val to navigation.
                 self.pub_.publish(result_val)
@@ -315,14 +315,14 @@ class voice_cmd_vel:
                 # ???
                             
             # Done parsing destination command.
-            if (!has_dest):
+            if (not has_dest):
               # Command completed, but didn't include any words that we
               # recognized. Prompt user to try rephrasing.
               # ???
                             
-        else if (!has_dest):
-          # !nav_mode: not moving.
-          # !has_dest: has no destination.
+        elif (not has_dest):
+          # not nav_mode: not moving.
+          # not has_dest: has no destination.
           # State: READY.
           # Prompt user to speak command.
           # ???
@@ -341,7 +341,7 @@ class voice_cmd_vel:
       # Wait until the lock is available and the parser has caught all
       # previous words.
       self.word_lock.acquire()
-      while (!caught_all):
+      while (not caught_all):
         self.word_lock.release()
         self.r.sleep()
         self.word_lock.acquire()
