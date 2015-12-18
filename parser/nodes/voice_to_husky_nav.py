@@ -155,6 +155,7 @@ class voice_cmd_vel:
         # New word. Update caught_all, then parse, then release lock.
         new_string = self.latest_word
         caught_all = True
+        word_lock.release()
                 
         if (nav_mode):
           # Robot is moving.
@@ -327,7 +328,6 @@ class voice_cmd_vel:
           # Prompt user to speak command.
           # ???
             
-        word_lock.release()
       # Sleep and wait for the next word.
       self.r.sleep()
         
